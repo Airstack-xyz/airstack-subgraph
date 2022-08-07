@@ -40,9 +40,11 @@ Currently, we support eight verticals. Identify your project's vertical
 
 Use the following command to add Airstack Schemas and ABIs in your project's `subgraph.yaml`
 
-```npm
-npx airstack <verical>  --yaml <subgraph.yaml file path --dataSourceNames <name1, name2, ...>
-```
+<pre style="background-color: black; padding: 0;">
+<code style="color: white;">
+  npx airstack &lt;verical&gt; --yaml &lt;subgraph.yaml file path --dataSourceNames &lt;name1, name2, ...&gt;
+</code>
+</pre>
 
 `npx airstack <vertical>`
 will add the required Airstack entities and the ABI files in your `subgraph.yaml` file
@@ -56,15 +58,20 @@ Examples:
 
 a. NFT Marketplace
 
-```
-npx airstack nft_marketplace
-```
+<pre style="background-color: black; padding: 0;">
+<code style="color: white;">
+  npx airstack nft_marketplace
+</code>
+</pre>
 
 b. DEX
 
-```
-npx airstack dex --yaml "./subgraph.yaml" --dataSourceNames Factory, Pair
-```
+<pre style="background-color: black; padding: 0;">
+<code style="color: white;">
+  npx airstack dex --yaml "./subgraph.yaml" --dataSourceNames Factory, Pair
+</code>
+</pre>
+
 
 Following are the vertical Ids
 
@@ -87,16 +94,16 @@ Call the following functions from your subgraph mapping. An example implementati
 
 1. NFT sale transactions
    ```ts
-    function trackNFTSaleTransactions(
-      txHash: string,
-      fromArray: Address[],
-      toArray: Address[],
-      contractAddressArray: Address[],
-      nftIdArray: BigInt[],
-      paymentTokenAddress: Address,
-      paymentAmount: BigInt,
-      timestamp: BigInt
-    ): void;
+   function trackNFTSaleTransactions(
+     txHash: string,
+     fromArray: Address[],
+     toArray: Address[],
+     contractAddressArray: Address[],
+     nftIdArray: BigInt[],
+     paymentTokenAddress: Address,
+     paymentAmount: BigInt,
+     timestamp: BigInt
+   ): void;
    ```
 
 #### b. Swaps/DEX
@@ -179,16 +186,16 @@ Call the following functions from your subgraph mapping. An example implementati
 
 ### 4. Development status of each vertical
 
-  ⌛ = Prioritized<br/>
-  💬 = In discussion<br/>
-  🔨 = In progress implementation<br/>
-  ✅ = Completed<br/>
-  
-  | Verical | Status |
-  | ------- | :------:|
-  | NFT Marketplace | 🔨|
-  | DEX | 🔨|
-  | Bridges | 💬 |
-  | DAO | ⌛ |
-  | Defi | ⌛ |
-  | Games | ⌛ |
+⌛ = Prioritized<br/>
+💬 = In discussion<br/>
+🔨 = In progress implementation<br/>
+✅ = Completed<br/>
+
+| Verical         | Status |
+| --------------- | :----: |
+| NFT Marketplace |   🔨   |
+| DEX             |   🔨   |
+| Bridges         |   💬   |
+| DAO             |   ⌛   |
+| Defi            |   ⌛   |
+| Games           |   ⌛   |
