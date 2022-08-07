@@ -40,48 +40,35 @@ Currently, we support eight verticals. Identify your project's vertical
 
 Use the following command to add Airstack Schemas and ABIs in your project's `subgraph.yaml`
 
-<pre style="background-color: black; padding: 0;">
-<code style="color: white;">
-  npx airstack &lt;verical&gt; --yaml &lt;subgraph.yaml file path --dataSourceNames &lt;name1, name2, ...&gt;
-</code>
-</pre>
+```npm
+npx airstack <verical>  --yaml <subgraph.yaml file path --dataSourceNames <name1, name2, ...>
+```
 
 `npx airstack <vertical>`
-will add the required Airstack entities and the ABI files in your `subgraph.yaml` file
+will add the required Airstack entities and the ABI files in your **subgraph.yaml** file
 
 `--yaml <subgraph.yaml file path>`
-provide the location of your project's `subgraph.yaml` file. This is an optional parameter.
+provide the location of your project's **subgraph.yaml** file. This is an optional parameter.
 
-`--dataSourceNames <name1, name2, ...>` provide the `dataSource` name where Airstack entities will be added. This is an optional parameter. By default, the entities will be added in all the `dataSource` provided in the `subgraph.yaml`.
+`--dataSourceNames <name1, name2, ...>` provide the **dataSource** name where Airstack entities will be added. This is an optional parameter. By default, the entities will be added in all the **dataSource** provided in the **subgraph.yaml**.
 
 Examples:
 
 a. NFT Marketplace
 
-<pre style="background-color: black; padding: 0;">
-<code style="color: white;">
-  npx airstack nft_marketplace
-</code>
-</pre>
+```
+npx airstack nft_marketplace
+```
 
 b. DEX
 
-<pre style="background-color: black; padding: 0;">
-<code style="color: white;">
-  npx airstack dex --yaml "./subgraph.yaml" --dataSourceNames Factory, Pair
-</code>
-</pre>
-
+```
+npx airstack dex --yaml "./subgraph.yaml" --dataSourceNames Factory, Pair
+```
 
 Following are the vertical Ids
 
-NFT Marketplace: `nft_marketplace` <br/>
-NFT: `nft`
-Swap: `dex`<br/>
-Bridges: `bridge`<br/>
-DAO: `TBD`<br/>
-Defi: `TBD`<br/>
-Games: `TBD`<br/>
+NFT Marketplace: `nft_marketplace`<br/> NFT: `nft`Swap:`dex`<br/> Bridges: `bridge`<br/> DAO: `TBD`<br/> Defi: `TBD`<br/> Games: `TBD`<br/>
 
 Integration of the Airstack schemas is done. Now, move to the vertical-specific section for further integration.
 
@@ -93,6 +80,7 @@ Track actions for NFT Marketplace.
 Call the following functions from your subgraph mapping. An example implementation is [Here](https://github.com/Airstack-xyz).
 
 1. NFT sale transactions
+
    ```ts
    function trackNFTSaleTransactions(
      txHash: string,
@@ -105,6 +93,15 @@ Call the following functions from your subgraph mapping. An example implementati
      timestamp: BigInt
    ): void;
    ```
+
+   **txHash**: Add details<br/>
+   **fromArray**: Add details<br/>
+   **toArray**: Add details<br/>
+   **contractAddressArray**: Add details<br/>
+   **nftIdArray**: Add details<br/>
+   **paymentTokenAddress**: Add details<br/>
+   **paymentAmount**: Add details<br/>
+   **timestamp**: Add details<br/>
 
 #### b. Swaps/DEX
 
@@ -123,11 +120,11 @@ Call the following functions from your subgraph mapping. An example implementati
     ): void;
    ```
 
-   `poolAddress`: Add details<br/>
-   `fee`: Add details<br/>
-   `inputTokens`: Add details<br/>
-   `weights`: Add details<br/>
-   `outputToken`: Add details<br/>
+   **poolAddress**: Add details<br/>
+   **fee**: Add details<br/>
+   **inputTokens**: Add details<br/>
+   **weights**: Add details<br/>
+   **outputToken**: Add details<br/>
 
 2. Add Liquidity
 
@@ -143,13 +140,13 @@ Call the following functions from your subgraph mapping. An example implementati
    ): void;
    ```
 
-   `poolAddress`: Add details<br/>
-   `inputAmounts`: Add details<br/>
-   `from`: Add details<br/>
-   `to`: Add details<br/>
-   `hash`: Add details<br/>
-   `logIndex`: Add details<br/>
-   `timestamp`: Add details<br/>
+   **poolAddress**: Add details<br/>
+   **inputAmounts**: Add details<br/>
+   **from**: Add details<br/>
+   **to**: Add details<br/>
+   **hash**: Add details<br/>
+   **logIndex**: Add details<br/>
+   **timestamp**: Add details<br/>
 
 3. Swap
 
@@ -168,16 +165,16 @@ Call the following functions from your subgraph mapping. An example implementati
    ): void;
    ```
 
-   `poolAddress`: Add details<br/>
-   `inputAmounts`: Add details<br/>
-   `outputAmounts`: Add details<br/>
-   `inputTokenIndex`: Add details<br/>
-   `outputTokenIndex`: Add details<br/>
-   `from`: Add details<br/>
-   `to`: Add details<br/>
-   `hash`: Add details<br/>
-   `logIndex`: Add details<br/>
-   `timestamp`: Add details<br/>
+   **poolAddress**: Add details<br/>
+   **inputAmounts**: Add details<br/>
+   **outputAmounts**: Add details<br/>
+   **inputTokenIndex**: Add details<br/>
+   **outputTokenIndex**: Add details<br/>
+   **from**: Add details<br/>
+   **to**: Add details<br/>
+   **hash**: Add details<br/>
+   **logIndex**: Add details<br/>
+   **timestamp**: Add details<br/>
 
 4. Remove Liquidity
    ```
