@@ -7,11 +7,17 @@
 
 ## Introduction
 
-**Abstract.** Airstack is a decentralized data network that makes blockchain activity easily discoverable, browsable, and consumable. Before Airstack, blockchain data was trapped in silos: A person might transact with a bunch of dapps, or interact with different protocols, or earn various currencies, or trade different tokens, or participate in various DAOs, or be a member of several NFT communities, and each of those transactions happen in isolation. Airstack brings those transactions together in virtual stacks of data. For example, with Airstack you can easily pinpoint that 5040 people all used a specific dapp today, that 807 of them used that dapp plus a specific DeFi protocol, 257 of them are members of investment DAOs, and that 53 of them are also attending the upcoming ETH.cc conference.
+Airstack is developing a Protocol and DAPP for browsing, discovering, and consuming on-chain data across projects and across blockchains. Our motivation for creating Airstack is to enable common ways to organize blockchain data and make it universally consumable. 
 
-This data is incredibly valuable to developers, traders, investors, marketers, and for various types of business development. The Airstack Data Privacy Protocol (ADPP) provides for access to this data while empowering consumers to securely lock, control and monetize it. ADPP also provides a method for ensuring that no 3rd party, including Airstack, can de-anonymize user data without their permission.
+This is a large and important problem to solve. On Ethereum based chains (EVMs) alone there are already more than 10 million daily transactions happening across thousands of protocols and dapps. Today those transactions exist in silos; there are no easy ways to query across projects and blockchains — to map relationship and behaviors, discover trends at the event level, and analyze product utility. 
 
-## What is Airstack Schema?
+Airstack is building the tooling now to enable a decentralized web3 data network that will enable easy querying of data across projects and blockchains.
+
+To do so, Airstack is helping standardize blockchain data, aggregating it, mapping relationships, and providing protocols and APIs to access it.
+
+
+
+## What are Airstack Schema?
 
 Airstack schemas are standardized schemas to access the data across projects and blockchains.
 These schemas are for eight initial verticals, and it is intended that any dapp/protocol within those verticals could be indexed consistently by utilizing the Airstack schemas for Subgraph.
