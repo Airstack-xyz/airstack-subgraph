@@ -7,15 +7,13 @@
 
 ## Introduction
 
-Airstack is developing a Protocol and DAPP for browsing, discovering, and consuming on-chain data across projects and across blockchains. Our motivation for creating Airstack is to enable common ways to organize blockchain data and make it universally consumable. 
+Airstack is developing a Protocol and DAPP for browsing, discovering, and consuming on-chain data across projects and across blockchains. Our motivation for creating Airstack is to enable common ways to organize blockchain data and make it universally consumable.
 
-This is a large and important problem to solve. On Ethereum based chains (EVMs) alone there are already more than 10 million daily transactions happening across thousands of protocols and dapps. Today those transactions exist in silos; there are no easy ways to query across projects and blockchains — to map relationship and behaviors, discover trends at the event level, and analyze product utility. 
+This is a large and important problem to solve. On Ethereum based chains (EVMs) alone there are already more than 10 million daily transactions happening across thousands of protocols and dapps. Today those transactions exist in silos; there are no easy ways to query across projects and blockchains — to map relationship and behaviors, discover trends at the event level, and analyze product utility.
 
 Airstack is building the tooling now to enable a decentralized web3 data network that will enable easy querying of data across projects and blockchains.
 
 To do so, Airstack is helping standardize blockchain data, aggregating it, mapping relationships, and providing protocols and APIs to access it.
-
-
 
 ## What are Airstack Schema?
 
@@ -126,11 +124,11 @@ Call the following functions from your subgraph mapping. An example implementati
     ): void;
    ```
 
-   **poolAddress**: Add details<br/>
-   **fee**: Add details<br/>
-   **inputTokens**: Add details<br/>
-   **weights**: Add details<br/>
-   **outputToken**: Add details<br/>
+   **poolAddress**: Dex pool address<br/>
+   **fee**: Fee amount<br/>
+   **inputTokens**: Array of address of tokens<br/>
+   **weights**: Weightage of each input token<br/>
+   **outputToken**: LP token address<br/>
 
 2. Add Liquidity
 
@@ -146,13 +144,13 @@ Call the following functions from your subgraph mapping. An example implementati
    ): void;
    ```
 
-   **poolAddress**: Add details<br/>
-   **inputAmounts**: Add details<br/>
-   **from**: Add details<br/>
-   **to**: Add details<br/>
-   **hash**: Add details<br/>
-   **logIndex**: Add details<br/>
-   **timestamp**: Add details<br/>
+   **poolAddress**: Dex pool address<br/>
+   **inputAmounts**: Array of input token amounts<br/>
+   **from**: From wallet address<br/>
+   **to**: To wallet address<br/>
+   **hash**: Transaction hash<br/>
+   **logIndex**: Transaction log index<br/>
+   **timestamp**: Transaction timestamp<br/>
 
 3. Swap
 
@@ -171,16 +169,16 @@ Call the following functions from your subgraph mapping. An example implementati
    ): void;
    ```
 
-   **poolAddress**: Add details<br/>
-   **inputAmounts**: Add details<br/>
-   **outputAmounts**: Add details<br/>
-   **inputTokenIndex**: Add details<br/>
-   **outputTokenIndex**: Add details<br/>
-   **from**: Add details<br/>
-   **to**: Add details<br/>
-   **hash**: Add details<br/>
-   **logIndex**: Add details<br/>
-   **timestamp**: Add details<br/>
+   **poolAddress**: Dex pool address<br/>
+   **inputAmounts**: Array of input amounts<br/>
+   **outputAmounts**: Array of output amounts<br/>
+   **inputTokenIndex**: Index of token in dex pool for input<br/>
+   **outputTokenIndex**: Index of token in dex pool for output<br/>
+   **from**: From wallet address<br/>
+   **to**: To wallet address<br/>
+   **hash**: Transaction hash<br/>
+   **logIndex**: Transaction log index<br/>
+   **timestamp**: Transaction timestamp<br/>
 
 4. Remove Liquidity
    ```
