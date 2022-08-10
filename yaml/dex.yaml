@@ -1,0 +1,23 @@
+dataSources:
+  - kind: ethereum/contract
+    network: mainnet
+    mapping:
+      entities:
+        - AirDailyAggregateEntity
+        - AirDailyAggregateEntityStats
+        - AirToken
+        - AirDailyAggregateEntityAccount
+        - AirAccount
+        - AirDEXPool
+        - AirLiquidityPoolStats
+        - AirTokenStats
+        - AirEntityDailyChangeStats
+        - AirLiquidityPoolInputTokenStats
+        - AirLiquidityPoolOutputTokenStats
+        - AirLiquidityPoolTransaction
+        - AirTokenTransfer
+        - AirPoolFarmRewardStats
+        - AirPoolFarmTransaction
+        - AirDEXSwapStats
+        - AirDEXSwapTransaction
+        - AirMeta
