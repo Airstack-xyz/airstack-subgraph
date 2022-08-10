@@ -23,6 +23,7 @@ export function integrate(
 
   try {
     writeSubgraphYaml(vertical, subgraphYamlPath, dataSource);
+    writeSubgraphGraphql(vertical, schemaGraphqlPath);
   } catch (err) {
     console.error('Error while reading the file: ', err);
   }
@@ -102,4 +103,27 @@ function writeSubgraphYaml(
   );
 }
 
-function writeSubgraphGraphql() {}
+function writeSubgraphGraphql(vertical: Vertical, schemaGraphqlPath: string) {
+  try {
+    const airstackSchemas = getSchemasForVertical(vertical);
+    const sourceSchemas = fs.readFileSync(schemaGraphqlPath, 'utf8');
+
+    if (sourceSchemas.includes('--Airstack Schemas--')) {
+      console.log('Schema already exists');
+    } else {
+      fs.writeFile(`${schemaGraphqlPath}.bck`, sourceSchemas, err => {
+        if (err) {
+          console.log(err);
+        }
+      });
+
+      fs.appendFile(schemaGraphqlPath, airstackSchemas, err => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  } catch (err) {
+    console.error('Error while reading the file: ', err);
+  }
+}

@@ -17,19 +17,13 @@ export function getSchemasForVertical(verticalName: Vertical) {
     throw new Error(`Unsupported vertical ${verticalName}`);
   }
   const {schemaFilePath} = getFileNamesForVertical(verticalName);
-  console.log('schemaFilePath: ', schemaFilePath);
+  let schemaFileContent = '';
   try {
-    // const targetSubraphYaml = yaml.load(
-    //   fs.readFileSync("subgraphYamlPath", 'utf8')
-    // );
-    // console.log('targetSubraphYaml: ', targetSubraphYaml);
-    // const targetSubgraphGraphql = yaml.load(
-    //   fs.readFileSync(schemaGraphqlPath, 'utf8')
-    // );
-    // console.log('targetSubraphYaml: ', targetSubgraphGraphql);
+    schemaFileContent = fs.readFileSync(schemaFilePath, 'utf8');
   } catch (err) {
     console.error('Error while reading the file: ', err);
   }
+  return schemaFileContent;
 }
 
 export function getSubgraphYamlForVertical(
@@ -57,9 +51,8 @@ export function getFileNamesForVertical(
   if (!isVerticalSupported(verticalName)) {
     throw new Error(`Unsupported vertical ${verticalName}`);
   }
-
   const currentDirectory = process.cwd();
-  const schemaFilePath = `${currentDirectory}/graphql/${verticalName}.graphql`;
+  const schemaFilePath = `${currentDirectory}/graphql/airstack-${verticalName}-schema.graphql`;
   const yamlFilePath = `${currentDirectory}/yaml/${verticalName}.yaml`;
 
   return {schemaFilePath, yamlFilePath};

@@ -1,3 +1,6 @@
+#
+# --Airstack Schemas--
+
 enum AirTokenDisplayType {
   IMAGE
   VIDEO
