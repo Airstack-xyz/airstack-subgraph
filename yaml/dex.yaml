@@ -1,6 +1,6 @@
 dataSources:
-  - kind: ethereum/contract
-    network: mainnet
+  - kind: all
+    network: all
     mapping:
       entities:
         - AirDailyAggregateEntity
