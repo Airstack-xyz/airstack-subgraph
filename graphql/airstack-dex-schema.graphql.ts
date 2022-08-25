@@ -1,12 +1,28 @@
 const schema = `#
 # --Airstack Schemas--
 
-enum AirTokenDisplayType {
-  IMAGE
-  VIDEO
-  AUDIO
-  TEXT_IMAGE
-  TEXT
+enum AirNetwork {
+  ARBITRUM_ONE
+  ARWEAVE_MAINNET
+  AURORA
+  AVALANCHE
+  BOBA
+  BSC # aka BNB Chain
+  CELO
+  COSMOS
+  CRONOS
+  MAINNET # Ethereum Mainnet
+  FANTOM
+  FUSE
+  HARMONY
+  JUNO
+  MOONBEAM
+  MOONRIVER
+  NEAR_MAINNET
+  OPTIMISM
+  OSMOSIS
+  matic # aka Polygon
+  XDAI # aka Gnosis Chain
 }
 
 enum AirProtocolType {
@@ -34,30 +50,6 @@ enum AirTokenUsageType {
   STAKE
   MINT
   GENERIC
-}
-
-enum AirNetwork {
-  ARBITRUM_ONE
-  ARWEAVE_MAINNET
-  AURORA
-  AVALANCHE
-  BOBA
-  BSC # aka BNB Chain
-  CELO
-  COSMOS
-  CRONOS
-  MAINNET # Ethereum Mainnet
-  FANTOM
-  FUSE
-  HARMONY
-  JUNO
-  MOONBEAM
-  MOONRIVER
-  NEAR_MAINNET
-  OPTIMISM
-  OSMOSIS
-  matic # aka Polygon
-  XDAI # aka Gnosis Chain
 }
 
 enum AirProtocolActionType {
@@ -124,6 +116,8 @@ type AirDailyAggregateEntity implements AirEntityStats @entity {
   tokenCount: BigInt!
   transactionCount: BigInt! # number of transactions (not unique)
   volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  dailyChange: AirEntityDailyChangeStats!
+  blockHeight: BigInt!
   extraData: [AirExtraData!]
 }
 
@@ -131,11 +125,37 @@ type AirDailyAggregateEntityStats @entity {
   id: ID!
   protocolActionType: AirProtocolActionType!
 
+  #### NFT Market Place
+  # buyStats: AirNFTSaleStats
+  # sellStats: AirNFTSaleStats
+  # mintStats: AirNFTSaleStats
+  # giftStats: AirNFTSaleStats
+
   ##### DEX #####
   addPoolLiquidityStats: AirLiquidityPoolStats
   removePoolLiquidityStats: AirLiquidityPoolStats
   farmPoolRewardStats: AirPoolFarmRewardStats
   swapStats: AirDEXSwapStats
+
+  #### Bridge
+  #transferStats: AirstackBridgeTransferStats
+
+  ### Staking status
+  #stakingStats: AirstackStakingStats
+  #unstakingStats: AirstackUnStakingStats
+
+  ### Lending/Borrowing
+  #lendStats: AirstackLendStats
+  #borrowStats: AirstackBorrowStats
+  #flashLoanStats: AirstackFlashLoanStats
+
+  ### DAO Stats
+  #proposalStats: AirstackProposalStats
+
+  ### P2E Stats
+  #earnStats: AirstackEarnStats
+
+  ### Social Network Dapps ###
 }
 
 type AirToken @entity {
@@ -179,7 +199,16 @@ interface AirTokenStats implements AirEntityStats @entity {
   tokenCount: BigInt!
   transactionCount: BigInt! # number of transactions (not unique)
   volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  dailyChange: AirEntityDailyChangeStats!
   extraData: [AirExtraData!]
+}
+
+type AirEntityDailyChangeStats @entity {
+  id: ID!
+  walletCountChangeInPercentage: BigDecimal!
+  tokenCountChangeInPercentage: BigDecimal!
+  transactionCountChangeInPercentage: BigDecimal!
+  volumeInUSDChangeInPercentage: BigDecimal!
 }
 
 type AirContract @entity {
@@ -191,7 +220,7 @@ type AirDEXPool @entity {
   id: ID!
   poolAddress: String!
   inputToken: [AirToken!]!
-  tokenBalances: [BigInt!]!
+  tokenBalances:[BigInt!]!
   weightage: [BigDecimal!]!
   outputToken: AirToken!
   fee: BigInt!
@@ -211,6 +240,7 @@ type AirLiquidityPoolStats implements AirEntityStats @entity {
   tokenCount: BigInt!
   transactionCount: BigInt! # number of transactions (not unique)
   volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  dailyChange: AirEntityDailyChangeStats!
   extraData: [AirExtraData!]
 }
 
@@ -223,6 +253,7 @@ type AirLiquidityPoolInputTokenStats implements AirTokenStats @entity {
   tokenCount: BigInt!
   transactionCount: BigInt! # number of transactions (not unique)
   volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  dailyChange: AirEntityDailyChangeStats!
   extraData: [AirExtraData!]
 }
 
@@ -235,6 +266,7 @@ type AirLiquidityPoolOutputTokenStats implements AirTokenStats @entity {
   tokenCount: BigInt!
   transactionCount: BigInt! # number of transactions (not unique)
   volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  dailyChange: AirEntityDailyChangeStats!
   extraData: [AirExtraData!]
 }
 
@@ -336,6 +368,54 @@ type AirDEXSwapTransaction @entity {
   hash: String!
   inputTokenTransfer: AirTokenTransfer!
   outputTokenTransfer: AirTokenTransfer!
+}
+
+enum AirTokenDisplayType {
+  IMAGE
+  VIDEO
+  AUDIO
+  TEXT_IMAGE
+  TEXT
+}
+enum AirNFTTransactionType {
+  SALE
+  MINT
+  GIFT
+}
+
+type AirNFTSaleStats implements AirEntityStats @entity {
+  id: ID!
+  token: AirToken!
+  # todo: Please check if the derived from can work here.
+  transactions: [AirNFTSaleTransaction!]! @derivedFrom(field: "saleStat")
+
+  walletCount: BigInt!
+  tokenCount: BigInt!
+  transactionCount: BigInt! # number of transactions (not unique)
+  volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  dailyChange: AirEntityDailyChangeStats!
+  extraData: [AirExtraData!]
+}
+
+type AirNFTSaleTransaction @entity {
+  id: ID!
+  hash: String!
+  saleStat: AirNFTSaleStats!
+  type: AirNFTTransactionType!
+  to: AirAccount! #Buyer
+  from: AirAccount! #Seller
+  transactionToken: AirToken!
+  paymentToken: AirToken
+  tokenId: BigInt!
+  paymentAmount: BigInt
+  fees: BigInt
+  tokenMetadata: AirTokenMetadata
+}
+
+type AirMeta @entity{
+  id: ID!
+  daySinceEpoch: BigInt!
+  blockNumber: BigInt!
 }
 `;
 

@@ -6,6 +6,7 @@ import nftMarketPlaceSchema from "../graphql/airstack-nft-marketplace-schema.gra
 
 import dexYamlString from "../yamls/dex.yaml";
 import nftMarketPlaceYamlString from "../yamls/nft-marketplace.yaml";
+import priceOracleYamlString from "../yamls/price-oracles.yaml";
 
 export namespace Utils {
   export function isVerticalSupported(verticalName: string): boolean {
@@ -43,6 +44,10 @@ export namespace Utils {
     } else {
       return null;
     }
+  }
+
+  export function getAirstackPriceOracle(): Record<string,any> {
+    return  yaml.load(priceOracleYamlString) as Record<string, any>;
   }
 
   export function getAirstackSchemasForVertical(

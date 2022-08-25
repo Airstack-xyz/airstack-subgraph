@@ -56,12 +56,9 @@ async function writeSubgraphYaml(
       templates,
     });
     const airstackYaml = Utils.getAirstackYamlForVertical(vertical);
-    console.log("airstackYaml: ", airstackYaml);
+    const priceOracleYaml = Utils.getAirstackPriceOracle();
 
     const sourceSchemas = fs.readFileSync(subgraphYamlPath, "utf8");
-    if (sourceSchemas.includes("--Airstack Schemas--")) {
-      return resolve();
-    }
     const sourceSubgraphYaml = yaml.load(sourceSchemas) as Record<string, any>;
 
     let whiteListedDataSource = dataSource;
@@ -88,6 +85,15 @@ async function writeSubgraphYaml(
             dataSrc.mapping.entities.push(airEntity);
           }
         });
+
+        const existingAbiNames = dataSrc.mapping.abis.map((abiObj: Record<string,string>)=> {
+          return abiObj.name;
+        });
+        priceOracleYaml.abis.forEach((abiObj: Record<string,string>) => {
+          if(!existingAbiNames.includes(abiObj.name)) {
+              dataSrc.mapping.abis.push(abiObj);
+          }
+        })
       }
     });
 
@@ -101,15 +107,24 @@ async function writeSubgraphYaml(
               dataSrc.mapping.entities.push(airEntity);
             }
           });
+          const existingAbiNames = dataSrc.mapping.abis.map((abiObj: Record<string,string>)=> {
+            return abiObj.name;
+          });
+          priceOracleYaml.abis.forEach((abiObj: Record<string,string>) => {
+            if(!existingAbiNames.includes(abiObj.name)) {
+                dataSrc.mapping.abis.push(abiObj);
+            }
+          });
         }
       });
     }
 
+    
     Utils.backupFiles(subgraphYamlPath).then((isBackupSuccess: boolean) => {
       if (isBackupSuccess) {
         Utils.createFile(
           subgraphYamlPath,
-          yaml.dump(targetSubgraphYaml, { lineWidth: -1 })
+          yaml.dump(targetSubgraphYaml, { lineWidth: -1 , noRefs: true})
         ).then((isWriteSuccess: boolean) => {
           if (isWriteSuccess) {
             resolve();
@@ -129,14 +144,18 @@ function writeSubgraphGraphql(
   schemaGraphqlPath: string
 ): Promise<void> {
   return new Promise(async (resolve, reject) => {
+
+    const sourceSchemas = fs.readFileSync(schemaGraphqlPath, "utf8");
+    if (sourceSchemas.includes("--Airstack Schemas--")) {
+      return resolve();
+    }
+    
     const isBackupSuccess = await Utils.backupFiles(schemaGraphqlPath);
-    console.log("isBackupSuccess: ", isBackupSuccess);
     if (!isBackupSuccess) {
       reject();
     }
 
     const schemas = Utils.getAirstackSchemasForVertical(vertical);
-    console.log({ schemas });
     const isAppendSuccess = await Utils.appendFiles(schemaGraphqlPath, schemas);
     if (!isAppendSuccess) {
       reject();
