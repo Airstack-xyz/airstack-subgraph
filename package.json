@@ -1,24 +1,44 @@
 {
+  "name": "airstack",
+  "version": "1.0.0",
+  "description": "Integrate Airstack schemas in any subgraph.",
+  "main": "index.js",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build:subgraph": "graph build",
+    "build:package": "tsc",
+    "lint": "eslint . --ext .ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "airstack": "dist/bin/index.js"
+  },
+  "keywords": [
+    "airstack",
+    "subgraph",
+    "standard",
+    "schema",
+    "graphql",
+    "web3"
+  ],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "@types/js-yaml": "4.0.5",
-    "@types/node": "14.11.2",
-    "@types/yargs": "17.0.11",
-    "gts": "3.1.0",
+    "@types/node": "^18.7.13",
+    "@typescript-eslint/eslint-plugin": "5.35.1",
+    "eslint": "8.22.0",
+    "eslint-config-standard-with-typescript": "22.0.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-n": "15.2.5",
+    "eslint-plugin-promise": "6.0.1",
+    "i": "^0.3.7",
+    "npm": "^8.18.0",
     "typescript": "4.7.4"
   },
   "dependencies": {
-    "js-yaml": "4.1.0",
-    "ts-node": "10.9.1",
-    "yargs": "17.5.1"
-  },
-  "scripts": {
-    "lint": "gts lint",
-    "clean": "gts clean",
-    "compile": "tsc",
-    "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run lint",
-    "integrate": "ts-node ./index.ts"
+    "@graphprotocol/graph-cli": "0.33.0",
+    "@graphprotocol/graph-ts": "0.27.0",
+    "@types/js-yaml": "4.0.5",
+    "js-yaml": "4.1.0"
   }
 }

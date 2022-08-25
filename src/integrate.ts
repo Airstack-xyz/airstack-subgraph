@@ -1,129 +1,146 @@
-import {
-  DEFAULT_SUBGRAPH_SCHEMA_PATH,
-  DEFAULT_SUBGRAPH_YAML_PATH,
-  Vertical,
-} from './constants';
-import * as yaml from 'js-yaml';
-import * as fs from 'fs';
-import {getSchemasForVertical, getSubgraphYamlForVertical} from './utils';
-import {string} from 'yargs';
+import { Vertical } from "./constants";
+import { Utils } from "./utils";
+import * as fs from "fs";
+import * as yaml from "js-yaml";
 
-export function integrate(
-  vertical: Vertical,
-  subgraphYamlPath: string = DEFAULT_SUBGRAPH_YAML_PATH,
-  schemaGraphqlPath: string = DEFAULT_SUBGRAPH_SCHEMA_PATH,
-  dataSource: Array<string>
-): void {
-  console.log('Received: ', {
-    vertical,
-    subgraphYamlPath,
-    dataSource,
-    schemaGraphqlPath,
+export async function integrate(
+  vertical: string,
+  yaml: string,
+  graphql: string,
+  dataSources?: Array<string>,
+  templates?: Array<string>
+): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+    if (!Utils.isVerticalSupported(vertical)) {
+      console.error(`${vertical} vertical is not supported`);
+      reject();
+    }
+
+    if (!Utils.fileExits(yaml)) {
+      console.error(`YAML file ${yaml} does not exist.`);
+      reject();
+    }
+
+    if (!Utils.fileExits(graphql)) {
+      console.error(`GraphQL file ${graphql} does not exist.`);
+      reject();
+    }
+
+    writeSubgraphYaml(vertical as Vertical, yaml, dataSources, templates)
+      .then(() => {
+        writeSubgraphGraphql(vertical as Vertical, graphql)
+          .then(() => {
+            resolve();
+          })
+          .catch(() => {
+            reject();
+          });
+      })
+      .catch(() => {
+        reject();
+      });
   });
-
-  try {
-    writeSubgraphYaml(vertical, subgraphYamlPath, dataSource);
-    writeSubgraphGraphql(vertical, schemaGraphqlPath);
-  } catch (err) {
-    console.error('Error while reading the file: ', err);
-  }
 }
 
-function writeSubgraphYaml(
+async function writeSubgraphYaml(
   vertical: Vertical,
   subgraphYamlPath: string,
-  dataSource: Array<string>
-) {
-  const airstackYaml = getSubgraphYamlForVertical(vertical);
-  // console.log('airstackYaml: ', airstackYaml.dataSources[0].mapping);
+  dataSource?: Array<string>,
+  templates?: Array<string>
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    console.log("writeSubgraphYaml called: ", {
+      vertical,
+      subgraphYamlPath,
+      dataSource,
+      templates,
+    });
+    const airstackYaml = Utils.getAirstackYamlForVertical(vertical);
+    console.log("airstackYaml: ", airstackYaml);
 
-  const sourceSubgraphYaml = yaml.load(
-    fs.readFileSync(subgraphYamlPath, 'utf8')
-  ) as Record<string, any>;
+    const sourceSchemas = fs.readFileSync(subgraphYamlPath, "utf8");
+    if (sourceSchemas.includes("--Airstack Schemas--")) {
+      return resolve();
+    }
+    const sourceSubgraphYaml = yaml.load(sourceSchemas) as Record<string, any>;
 
-  let whiteListedDataSource = dataSource;
-  if (!whiteListedDataSource) {
-    whiteListedDataSource = sourceSubgraphYaml.dataSources.map(
-      (dSrc: Record<string, any>) => dSrc.name
-    );
-    const whiteListedTemplates = sourceSubgraphYaml.templates.map(
-      (dSrc: Record<string, any>) => dSrc.name
-    );
-    whiteListedDataSource = [...whiteListedDataSource, ...whiteListedTemplates];
-  }
+    let whiteListedDataSource = dataSource;
+    if (!whiteListedDataSource) {
+      whiteListedDataSource = sourceSubgraphYaml.dataSources.map(
+        (dSrc: Record<string, any>) => dSrc.name
+      );
+    }
 
-  const targetSubgraphYaml = {...sourceSubgraphYaml};
+    let whiteListedTemplates = templates;
+    if (!whiteListedTemplates) {
+      whiteListedTemplates = sourceSubgraphYaml.templates.map(
+        (dSrc: Record<string, any>) => dSrc.name
+      );
+    }
 
-  const targetDataSources = targetSubgraphYaml.dataSources;
-  targetDataSources.forEach((dataSrc: Record<string, any>) => {
-    if (whiteListedDataSource.includes(dataSrc.name)) {
-      const existingEntities = [...dataSrc.mapping.entities];
-      airstackYaml.dataSources[0].mapping.entities.forEach(
-        (airEntity: string) => {
+    const targetSubgraphYaml = { ...sourceSubgraphYaml };
+    const targetDataSources = targetSubgraphYaml.dataSources;
+    targetDataSources.forEach((dataSrc: Record<string, any>) => {
+      if (whiteListedDataSource!.includes(dataSrc.name)) {
+        const existingEntities = [...dataSrc.mapping.entities];
+        airstackYaml!.entities.forEach((airEntity: string) => {
           if (!existingEntities.includes(airEntity)) {
             dataSrc.mapping.entities.push(airEntity);
           }
-        }
-      );
-    }
-  });
+        });
+      }
+    });
 
-  const targetTemplates = targetSubgraphYaml.templates;
-  targetTemplates.forEach((dataSrc: Record<string, any>) => {
-    if (whiteListedDataSource.includes(dataSrc.name)) {
-      const existingEntities = [...dataSrc.mapping.entities];
-      airstackYaml.dataSources[0].mapping.entities.forEach(
-        (airEntity: string) => {
-          if (!existingEntities.includes(airEntity)) {
-            dataSrc.mapping.entities.push(airEntity);
+    if (targetSubgraphYaml.templates) {
+      const targetTemplates = targetSubgraphYaml.templates;
+      targetTemplates.forEach((dataSrc: Record<string, any>) => {
+        if (whiteListedTemplates!.includes(dataSrc.name)) {
+          const existingEntities = [...dataSrc.mapping.entities];
+          airstackYaml!.entities.forEach((airEntity: string) => {
+            if (!existingEntities.includes(airEntity)) {
+              dataSrc.mapping.entities.push(airEntity);
+            }
+          });
+        }
+      });
+    }
+
+    Utils.backupFiles(subgraphYamlPath).then((isBackupSuccess: boolean) => {
+      if (isBackupSuccess) {
+        Utils.createFile(
+          subgraphYamlPath,
+          yaml.dump(targetSubgraphYaml, { lineWidth: -1 })
+        ).then((isWriteSuccess: boolean) => {
+          if (isWriteSuccess) {
+            resolve();
+          } else {
+            reject();
           }
-        }
-      );
-    }
+        });
+      } else {
+        reject();
+      }
+    });
   });
-
-  fs.writeFile(
-    `${subgraphYamlPath}.bck`,
-    yaml.dump(sourceSubgraphYaml, {lineWidth: -1}),
-    err => {
-      if (err) {
-        console.log(err);
-      }
-    }
-  );
-
-  fs.writeFile(
-    subgraphYamlPath,
-    yaml.dump(targetSubgraphYaml, {lineWidth: -1}),
-    err => {
-      if (err) {
-        console.log(err);
-      }
-    }
-  );
 }
 
-function writeSubgraphGraphql(vertical: Vertical, schemaGraphqlPath: string) {
-  try {
-    const airstackSchemas = getSchemasForVertical(vertical);
-    const sourceSchemas = fs.readFileSync(schemaGraphqlPath, 'utf8');
-
-    if (sourceSchemas.includes('--Airstack Schemas--')) {
-      console.log('Schema already exists');
-    } else {
-      fs.writeFile(`${schemaGraphqlPath}.bck`, sourceSchemas, err => {
-        if (err) {
-          console.log(err);
-        }
-      });
-
-      fs.appendFile(schemaGraphqlPath, airstackSchemas, err => {
-        if (err) {
-          console.log(err);
-        }
-      });
+function writeSubgraphGraphql(
+  vertical: Vertical,
+  schemaGraphqlPath: string
+): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+    const isBackupSuccess = await Utils.backupFiles(schemaGraphqlPath);
+    console.log("isBackupSuccess: ", isBackupSuccess);
+    if (!isBackupSuccess) {
+      reject();
     }
-  } catch (err) {
-    console.error('Error while reading the file: ', err);
-  }
+
+    const schemas = Utils.getAirstackSchemasForVertical(vertical);
+    console.log({ schemas });
+    const isAppendSuccess = await Utils.appendFiles(schemaGraphqlPath, schemas);
+    if (!isAppendSuccess) {
+      reject();
+    }
+    resolve();
+  });
 }

@@ -1,4 +1,4 @@
-#
+const schema = `#
 # --Airstack Schemas--
 
 enum AirTokenDisplayType {
@@ -206,3 +206,6 @@ type AirNFTSaleTransaction @entity {
   fees: BigInt
   tokenMetadata: AirTokenMetadata
 }
+`;
+
+export default schema;

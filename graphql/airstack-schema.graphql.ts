@@ -1,4 +1,4 @@
-#
+const schema = `#
 # --Airstack Schemas--
 
 enum AirNetwork {
@@ -414,3 +414,6 @@ type AirMeta @entity {
   daySinceEpoch: BigInt!
   blockNumber: BigInt!
 }
+`;
+
+export default schema;

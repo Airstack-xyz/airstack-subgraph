@@ -1,8 +1,8 @@
-export const DEFAULT_SUBGRAPH_YAML_PATH = './subgraph.yaml';
-export const DEFAULT_SUBGRAPH_SCHEMA_PATH = './schema.graphql';
-
 export enum Vertical {
-  Dex = 'dex',
-  NftMarketplace = 'nft-marketplace',
+  Dex = "dex",
+  NftMarketplace = "nft-marketplace",
 }
-export const SupportedVerticals = [Vertical.Dex, Vertical.NftMarketplace];
+export const SupportedVerticals: Array<string> = [
+  Vertical.Dex,
+  Vertical.NftMarketplace,
+];

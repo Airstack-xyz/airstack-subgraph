@@ -1,59 +1,110 @@
-import {SupportedVerticals, Vertical} from './constants';
-import * as yaml from 'js-yaml';
-import * as fs from 'fs';
+import { SupportedVerticals, Vertical } from "./constants";
+import * as fs from "fs";
+import * as yaml from "js-yaml";
+import dexSchema from "../graphql/airstack-dex-schema.graphql";
+import nftMarketPlaceSchema from "../graphql/airstack-nft-marketplace-schema.graphql";
 
-export function isVerticalSupported(verticalName: Vertical): boolean {
-  return SupportedVerticals.includes(verticalName);
-}
+import dexYamlString from "../yamls/dex.yaml";
+import nftMarketPlaceYamlString from "../yamls/nft-marketplace.yaml";
 
-export function getAbisForVertical(verticalName: Vertical) {
-  if (!isVerticalSupported(verticalName)) {
-    throw new Error(`Unsupported vertical ${verticalName}`);
+export namespace Utils {
+  export function isVerticalSupported(verticalName: string): boolean {
+    return SupportedVerticals.includes(verticalName.toLowerCase());
   }
-}
 
-export function getSchemasForVertical(verticalName: Vertical) {
-  if (!isVerticalSupported(verticalName)) {
-    throw new Error(`Unsupported vertical ${verticalName}`);
+  export function fileExits(filePath: string): boolean {
+    try {
+      const fileContent = fs.readFileSync(filePath, "utf8");
+      return fileContent.length > 0;
+    } catch (err) {
+      return false;
+    }
   }
-  const {schemaFilePath} = getFileNamesForVertical(verticalName);
-  let schemaFileContent = '';
-  try {
-    schemaFileContent = fs.readFileSync(schemaFilePath, 'utf8');
-  } catch (err) {
-    console.error('Error while reading the file: ', err);
-  }
-  return schemaFileContent;
-}
 
-export function getSubgraphYamlForVertical(
-  verticalName: Vertical
-): Record<string, any> {
-  if (!isVerticalSupported(verticalName)) {
-    throw new Error(`Unsupported vertical ${verticalName}`);
-  }
-  const {yamlFilePath} = getFileNamesForVertical(verticalName);
-  console.log('yamlFilePath: ', yamlFilePath);
-  let yamlFileContent: Record<string, any> = {};
-  try {
-    yamlFileContent = yaml.load(
-      fs.readFileSync(yamlFilePath, 'utf8')
-    ) as Record<string, any>;
-  } catch (err) {
-    console.error('Error while reading the file: ', err);
-  }
-  return yamlFileContent;
-}
+  export function getAirstackYamlForVertical(
+    verticalName: Vertical
+  ): Record<string, any> | null {
+    if (!isVerticalSupported(verticalName)) {
+      throw new Error(`Unsupported vertical ${verticalName}`);
+    }
 
-export function getFileNamesForVertical(
-  verticalName: Vertical
-): Record<string, string> {
-  if (!isVerticalSupported(verticalName)) {
-    throw new Error(`Unsupported vertical ${verticalName}`);
-  }
-  const currentDirectory = process.cwd();
-  const schemaFilePath = `${currentDirectory}/graphql/airstack-${verticalName}-schema.graphql`;
-  const yamlFilePath = `${currentDirectory}/yaml/${verticalName}.yaml`;
+    let yamlString: string | null = null;
+    switch (verticalName) {
+      case Vertical.Dex:
+        yamlString = dexYamlString;
+      case Vertical.NftMarketplace:
+        yamlString = nftMarketPlaceYamlString;
+      default:
+        break;
+    }
 
-  return {schemaFilePath, yamlFilePath};
+    if (yamlString !== null) {
+      return yaml.load(yamlString) as Record<string, any>;
+    } else {
+      return null;
+    }
+  }
+
+  export function getAirstackSchemasForVertical(
+    verticalName: Vertical
+  ): string {
+    if (!isVerticalSupported(verticalName)) {
+      throw new Error(`Unsupported vertical ${verticalName}`);
+    }
+    switch (verticalName) {
+      case Vertical.Dex:
+        return dexSchema;
+      case Vertical.NftMarketplace:
+        return nftMarketPlaceSchema;
+      default:
+        break;
+    }
+    return "";
+  }
+
+  export function backupFiles(filePath: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const sourceContent = fs.readFileSync(filePath, "utf8");
+      fs.writeFile(`${filePath}.bck`, sourceContent, (err) => {
+        if (err) {
+          console.log(err);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
+
+  export function appendFiles(
+    filePath: string,
+    content: string
+  ): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      fs.appendFile(filePath, content, (err) => {
+        if (err) {
+          console.log(err);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
+
+  export function createFile(
+    filePath: string,
+    content: string
+  ): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(filePath, content, (err) => {
+        if (err) {
+          console.log(err);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
 }
