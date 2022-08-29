@@ -38,14 +38,19 @@ The 8 verticals defined for Airstack schemas are:
 
 You already have a subgraph for Dapp/Protocol. And you intend to integrate Airstack schemas into the project.
 
-### 2. Identify the vertical for the Dapp/Protocol:
+### 2. Install Airstack package:
+```npm
+npm install airstack
+```
+
+### 3. Identify the vertical for the Dapp/Protocol:
 
 Currently, we support eight verticals. Identify your project's vertical
 
 Use the following command to add Airstack Schemas and ABIs in your project's `subgraph.yaml`
 
 ```npm
-npx airstack <verical>  --yaml <subgraph.yaml file path --dataSourceNames <name1, name2, ...>
+npx airstack <verical>  --yaml <subgraph.yaml file path> --graphql <schema.graphql file path> --dataSourceNames <"name1, name2, ..."> --templates <"name1, name2"> 
 ```
 
 `npx airstack <vertical>`
@@ -54,7 +59,12 @@ will add the required Airstack entities and the ABI files in your **subgraph.yam
 `--yaml <subgraph.yaml file path>`
 provide the location of your project's **subgraph.yaml** file. This is an optional parameter.
 
+`--graphql <subgraph.graphql file path>`
+provide the location of your project's **schema.graphql** file. This is an optional parameter.
+
 `--dataSourceNames <name1, name2, ...>` provide the **dataSource** name where Airstack entities will be added. This is an optional parameter. By default, the entities will be added in all the **dataSource** provided in the **subgraph.yaml**.
+
+`--templates <name1, name2, ...>` provide the **teamplate** name where Airstack entities will be added. This is an optional parameter. By default, the entities will be added in all the **teamplate** provided in the **subgraph.yaml**.
 
 Examples:
 
@@ -67,7 +77,7 @@ npx airstack nft_marketplace
 b. DEX
 
 ```
-npx airstack dex --yaml "./subgraph.yaml" --dataSourceNames Factory, Pair
+npx airstack dex --yaml "./subgraph.yaml" --dataSourceNames "Factory, Pair"
 ```
 
 Following are the vertical Ids

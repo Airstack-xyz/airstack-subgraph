@@ -1,5 +1,5 @@
 import * as constants from "./constants";
-import { ERC20 } from "../../../generated/Airstack/ERC20";
+import { ERC20 } from "../../../generated/{{dataSource}}/ERC20";
 import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts";
 
 export function readValue<T>(
@@ -16,5 +16,5 @@ export function getTokenDecimals(tokenAddr: Address): BigInt {
   if (decimals.reverted) {
     return constants.DEFAULT_DECIMALS;
   }
-  return decimals.value;
+  return BigInt.fromI32(decimals.value);
 }

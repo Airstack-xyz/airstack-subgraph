@@ -16,8 +16,8 @@ import * as MOONRIVER from "../config/moonriver";
 import * as OASIS from "../config/oasis";
 
 import { Address, BigDecimal, BigInt, TypedMap } from "@graphprotocol/graph-ts";
-import { UniswapPair__getReservesResult } from "../../../generated/Airstack/UniswapPair";
-import { SushiSwapPair__getReservesResult } from "../../../generated/Airstack/SushiSwapPair";
+import { UniswapPair__getReservesResult } from "../../../generated/{{dataSource}}/UniswapPair";
+import { SushiSwapPair__getReservesResult } from "../../../generated/{{dataSource}}/SushiSwapPair";
 
 ///////////////////////////////////////////////////////////////////////////
 /////////////////////////////////// COMMON ////////////////////////////////

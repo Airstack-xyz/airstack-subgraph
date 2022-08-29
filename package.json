@@ -2,7 +2,7 @@
   "name": "airstack",
   "version": "1.0.0",
   "description": "Integrate Airstack schemas in any subgraph.",
-  "main": "index.js",
+  "main": "modules/airstack/index",
   "scripts": {
     "codegen": "graph codegen",
     "build:subgraph": "graph build",
@@ -24,21 +24,23 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^18.7.13",
+    "@types/fs-extra": "9.0.13",
+    "@types/mustache": "4.2.1",
+    "@types/node": "18.7.13",
     "@typescript-eslint/eslint-plugin": "5.35.1",
     "eslint": "8.22.0",
     "eslint-config-standard-with-typescript": "22.0.0",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-n": "15.2.5",
     "eslint-plugin-promise": "6.0.1",
-    "i": "^0.3.7",
-    "npm": "^8.18.0",
     "typescript": "4.7.4"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.33.0",
     "@graphprotocol/graph-ts": "0.27.0",
     "@types/js-yaml": "4.0.5",
-    "js-yaml": "4.1.0"
+    "fs-extra": "10.1.0",
+    "js-yaml": "4.1.0",
+    "mustache": "^4.2.0"
   }
 }

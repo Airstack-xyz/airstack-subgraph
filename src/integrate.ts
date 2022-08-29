@@ -2,10 +2,13 @@ import { Vertical } from "./constants";
 import { Utils } from "./utils";
 import * as fs from "fs";
 import * as yaml from "js-yaml";
+import fse from "fs-extra";
+import path from "path";
+import mustache from "mustache";
 
 export async function integrate(
   vertical: string,
-  yaml: string,
+  yamlPath: string,
   graphql: string,
   dataSources?: Array<string>,
   templates?: Array<string>
@@ -16,8 +19,8 @@ export async function integrate(
       reject();
     }
 
-    if (!Utils.fileExits(yaml)) {
-      console.error(`YAML file ${yaml} does not exist.`);
+    if (!Utils.fileExits(yamlPath)) {
+      console.error(`YAML file ${yamlPath} does not exist.`);
       reject();
     }
 
@@ -26,11 +29,48 @@ export async function integrate(
       reject();
     }
 
-    writeSubgraphYaml(vertical as Vertical, yaml, dataSources, templates)
+    writeSubgraphYaml(vertical as Vertical, yamlPath, dataSources, templates)
       .then(() => {
         writeSubgraphGraphql(vertical as Vertical, graphql)
           .then(() => {
-            resolve();
+            const targetDirectory = copyAirstackModules();
+
+            const arrayOfFiles: Array<string> = []
+            getAllFiles(targetDirectory,arrayOfFiles)
+            
+            let dataSourceName = "";
+            if(dataSources && dataSources.length>0) {
+              dataSourceName = dataSources[0];
+
+            }else if(templates && templates.length>0) {
+              dataSourceName = templates[0];
+
+            }else {
+              const yamlSchemas = fs.readFileSync(yamlPath, "utf8");
+              const sourceSubgraphYaml = yaml.load(yamlSchemas) as Record<string, any>;
+              if(sourceSubgraphYaml.dataSources && sourceSubgraphYaml.dataSources.length>0){
+                dataSourceName = sourceSubgraphYaml.dataSources[0].name;
+              } else if(sourceSubgraphYaml.templates && sourceSubgraphYaml.templates.length>0){
+                dataSourceName = sourceSubgraphYaml.templates[0].name;
+              }
+            }
+
+            const writeFilePromise: Array<Promise<any>> = [];
+            arrayOfFiles.forEach((filePath:string)=>{
+              writeFilePromise.push(new Promise((resolve,reject)=>{
+                const fileContent = fs.readFileSync(filePath, "utf8");
+                const finalFileContent = mustache.render(fileContent, {dataSource: dataSourceName})
+                
+                fs.writeFile(filePath, finalFileContent, (err) => {
+                  if (err) {
+                    console.log(err);                
+                  }
+                });  
+              }));
+            });
+            Promise.all(writeFilePromise).finally(()=>{
+              resolve();
+            });
           })
           .catch(() => {
             reject();
@@ -162,4 +202,35 @@ function writeSubgraphGraphql(
     }
     resolve();
   });
+}
+
+function copyAirstackModules(): string {
+  const sourceDir = path.resolve(__dirname, '../../modules');
+  const targetDir = path.resolve(__dirname, '../../../../modules');
+
+  // To copy a folder or file, select overwrite accordingly
+  try {
+    fse.copySync(sourceDir, targetDir, { overwrite: true })
+  } catch (err) {
+    console.error(err)
+  } finally{
+    return targetDir
+  }
+}
+
+
+function getAllFiles(dirPath: string, arrayOfFiles: Array<string>) {
+  const files = fs.readdirSync(dirPath)
+
+  arrayOfFiles = arrayOfFiles || []
+
+  files.forEach(function(file) {
+    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+      arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles)
+    } else {
+      arrayOfFiles.push(path.join(dirPath, "/", file))
+    }
+  })
+
+  return arrayOfFiles
 }

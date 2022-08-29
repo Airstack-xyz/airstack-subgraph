@@ -188,8 +188,8 @@ export namespace dex {
       entity.transactionCount = BIGINT.ZERO;
       entity.volumeInUSD = BIG_DECIMAL.ZERO;
 
-      const dailyChange = getOrCreateAirEntityDailyChangeStats(id);
-      entity.dailyChange = dailyChange.id;
+      // const dailyChange = getOrCreateAirEntityDailyChangeStats(id);
+      // entity.dailyChange = dailyChange.id;
     }
     return entity;
   }
@@ -412,8 +412,8 @@ export namespace dex {
       tokenStats.tokenCount = BIGINT.ZERO;
       tokenStats.transactionCount = BIGINT.ZERO;
       tokenStats.volumeInUSD = BIG_DECIMAL.ZERO;
-      const dailyChangeStats = getOrCreateAirEntityDailyChangeStats(id);
-      tokenStats.dailyChange = dailyChangeStats.id;
+      // const dailyChangeStats = getOrCreateAirEntityDailyChangeStats(id);
+      // tokenStats.dailyChange = dailyChangeStats.id;
     }
     return tokenStats;
   }
@@ -483,8 +483,8 @@ export namespace dex {
       tokenStats.transactionCount = BIGINT.ZERO;
       tokenStats.volumeInUSD = BIG_DECIMAL.ZERO;
 
-      const dailyChangeStats = getOrCreateAirEntityDailyChangeStats(id);
-      tokenStats.dailyChange = dailyChangeStats.id;
+      // const dailyChangeStats = getOrCreateAirEntityDailyChangeStats(id);
+      // tokenStats.dailyChange = dailyChangeStats.id;
     }
     return tokenStats;
   }
@@ -921,8 +921,8 @@ export namespace dex {
       entity.transactionCount = BIGINT.ZERO;
       entity.volumeInUSD = BIG_DECIMAL.ZERO;
 
-      const dailyChange = getOrCreateAirEntityDailyChangeStats(id);
-      entity.dailyChange = dailyChange.id;
+      // const dailyChange = getOrCreateAirEntityDailyChangeStats(id);
+      // entity.dailyChange = dailyChange.id;
     }
     return entity;
   }
@@ -968,8 +968,8 @@ export namespace dex {
       tokenStats.tokenCount = BIGINT.ZERO;
       tokenStats.transactionCount = BIGINT.ZERO;
       tokenStats.volumeInUSD = BIG_DECIMAL.ZERO;
-      const dailyChangeStats = getOrCreateAirEntityDailyChangeStats(id);
-      tokenStats.dailyChange = dailyChangeStats.id;
+      // const dailyChangeStats = getOrCreateAirEntityDailyChangeStats(id);
+      // tokenStats.dailyChange = dailyChangeStats.id;
     }
     return tokenStats;
   }
@@ -1014,8 +1014,8 @@ export namespace dex {
       tokenStats.tokenCount = BIGINT.ZERO;
       tokenStats.transactionCount = BIGINT.ZERO;
       tokenStats.volumeInUSD = BIG_DECIMAL.ZERO;
-      const dailyChangeStats = getOrCreateAirEntityDailyChangeStats(id);
-      tokenStats.dailyChange = dailyChangeStats.id;
+      // const dailyChangeStats = getOrCreateAirEntityDailyChangeStats(id);
+      // tokenStats.dailyChange = dailyChangeStats.id;
     }
     return tokenStats;
   }

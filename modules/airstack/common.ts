@@ -20,8 +20,8 @@ import {
   AirMeta,
   AirToken,
 } from "../../generated/schema";
-import { ERC721MetaData } from "../../generated/Airstack/ERC721MetaData";
-import { ERC20 } from "../../generated/Airstack/ERC20";
+import { ERC721MetaData } from "../../generated/{{dataSource}}/ERC721MetaData";
+import { ERC20 } from "../../generated/{{dataSource}}/ERC20";
 import { getNetworkSchemaName } from "./utils/network";
 import { calculatePercentage } from "./utils/maths";
 
@@ -159,7 +159,7 @@ export function getOrCreateAirToken(id: string): AirToken {
       entity.decimals = 18;
       if (!decimals.reverted) {
         entity.standard = AirTokenStandardType.ERC20;
-        entity.decimals = decimals.value.toI32();
+        entity.decimals = decimals.value;
       }
 
       let totalSupply = erc20Contract.try_totalSupply(); //todo double confirm

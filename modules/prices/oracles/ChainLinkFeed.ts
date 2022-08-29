@@ -1,8 +1,8 @@
 import { Address } from "@graphprotocol/graph-ts";
 import { CustomPriceType } from "../common/types";
-import { ChainlinkOracle } from "../../../generated/Airstack/ChainlinkOracle";
+import { ChainlinkOracle } from "../../../generated/{{dataSource}}/ChainlinkOracle";
 import { polygonOracles as oracles } from "./oracles";
-import { ERC20 } from "../../../generated/Factory/ERC20";
+import { ERC20 } from "../../../generated/{{dataSource}}/ERC20";
 import { ZERO_ADDRESS } from "../common/constants";
 import { CHAIN_LINK_USD_ADDRESS } from "../common/constants";
 
@@ -33,7 +33,7 @@ export function getTokenPriceFromChainLink(
 
     return CustomPriceType.initialize(
       result.value.value1.toBigDecimal(),
-      decimals.toI32()
+      decimals
     );
   }
 

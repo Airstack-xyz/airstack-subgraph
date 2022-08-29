@@ -3,7 +3,7 @@ abis:
   - name: ERC721MetaData
     file: ./node_modules/airstack/abis/Prices/ERC721.json    
   - name: ERC20
-    file: ./node_modules/airstack/abis/Prices/ERC20.json
+    file: ./node_modules/airstack/abis/ERC20.json
   - name: CurveRegistry
     file: ./node_modules/airstack/abis/Prices/Curve/Registry.json
   - name: CurvePoolRegistry
@@ -12,6 +12,8 @@ abis:
     file: ./node_modules/airstack/abis/Prices/Calculations/Curve.json
   - name: YearnLensContract
     file: ./node_modules/airstack/abis/Prices/YearnLens.json
+  - name: ChainlinkOracle
+    file: ./node_modules/airstack/abis/Prices/ChainLink.json
   - name: ChainLinkContract
     file: ./node_modules/airstack/abis/Prices/ChainLink.json
   - name: UniswapRouter
