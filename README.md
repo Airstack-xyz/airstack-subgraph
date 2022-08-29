@@ -40,7 +40,7 @@ You already have a subgraph for Dapp/Protocol. And you intend to integrate Airst
 
 ### 2. Install Airstack package:
 ```npm
-npm install airstack
+npm install  @airstack/subgraph-generator
 ```
 
 ### 3. Identify the vertical for the Dapp/Protocol:
@@ -50,7 +50,7 @@ Currently, we support eight verticals. Identify your project's vertical
 Use the following command to add Airstack Schemas and ABIs in your project's `subgraph.yaml`
 
 ```npm
-npx airstack <verical>  --yaml <subgraph.yaml file path> --graphql <schema.graphql file path> --dataSourceNames <"name1, name2, ..."> --templates <"name1, name2"> 
+npx  @airstack/subgraph-generator <vertical>  --yaml <subgraph.yaml file path> --graphql <schema.graphql file path> --dataSourceNames <"name1, name2, ..."> --templates <"name1, name2"> 
 ```
 
 `npx airstack <vertical>`
@@ -71,13 +71,13 @@ Examples:
 a. NFT Marketplace
 
 ```
-npx airstack nft_marketplace
+npx @airstack/subgraph-generator nft_marketplace
 ```
 
 b. DEX
 
 ```
-npx airstack dex --yaml "./subgraph.yaml" --dataSourceNames "Factory, Pair"
+npx @airstack/subgraph-generator dex --yaml "./subgraph.yaml" --dataSourceNames "Factory, Pair"
 ```
 
 Following are the vertical Ids
