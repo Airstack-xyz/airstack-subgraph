@@ -67,7 +67,7 @@ type AirToken @entity {
 
 type AirTokenMetadata @entity {
   id: ID!
-  displayContentType: AirTokenDisplayType!
+	displayContentType: AirTokenDisplayType!
   displayContent: String
 }
 
@@ -120,7 +120,6 @@ interface AirEntityStats {
   extraData: [AirExtraData!]
 }
 type AirDailyAggregateEntity implements AirEntityStats @entity {
-  " {AirNetwork}-{AirContract}-{protocolActionType}-{daySinceEpoch} "
   id: ID!
   network: AirNetwork!
   contract: AirContract!
@@ -153,8 +152,7 @@ type AirDailyAggregateEntityAccount @entity {
 type AirAccount @entity {
   id: ID!
   address: String!
-  dailyAggregatedEntities: [AirDailyAggregateEntityAccount!]
-    @derivedFrom(field: "account")
+  dailyAggregatedEntities: [AirDailyAggregateEntityAccount!] @derivedFrom(field: "account")
 }
 
 type AirDailyAggregateEntityStats @entity {
@@ -189,7 +187,7 @@ type AirNFTSaleStats implements AirEntityStats @entity {
 type AirNFTSaleTransaction @entity {
   id: ID!
   hash: String!
-  saleStat: AirNFTSaleStats!
+  saleStat: AirNFTSaleStats! 
   type: AirNFTTransactionType!
   to: AirAccount! #Buyer
   from: AirAccount! #Seller

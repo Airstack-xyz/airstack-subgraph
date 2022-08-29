@@ -202,7 +202,7 @@ Call the following functions from your subgraph mapping. An example implementati
 🔨 = In progress implementation<br/>
 ✅ = Completed<br/>
 
-| Verical         | Status |
+| Vertical         | Status |
 | --------------- | :----: |
 | NFT Marketplace |   🔨   |
 | DEX             |   🔨   |
