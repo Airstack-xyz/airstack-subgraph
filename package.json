@@ -1,5 +1,5 @@
 {
-  "name": "airstack",
+  "name": "@airstack/subgraph-generator",
   "version": "1.0.0",
   "description": "Integrate Airstack schemas in any subgraph.",
   "main": "modules/airstack/index",
@@ -19,7 +19,8 @@
     "standard",
     "schema",
     "graphql",
-    "web3"
+    "web3",
+    "subgraph-generator"
   ],
   "author": "",
   "license": "ISC",
@@ -41,6 +42,6 @@
     "@types/js-yaml": "4.0.5",
     "fs-extra": "10.1.0",
     "js-yaml": "4.1.0",
-    "mustache": "^4.2.0"
+    "mustache": "4.2.0"
   }
 }
