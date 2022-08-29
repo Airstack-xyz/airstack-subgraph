@@ -55,22 +55,27 @@ export async function integrate(
               }
             }
 
-            const writeFilePromise: Array<Promise<any>> = [];
+            const writeFilePromise: Array<Promise<void>> = [];
             arrayOfFiles.forEach((filePath:string)=>{
-              writeFilePromise.push(new Promise((resolve,reject)=>{
+              writeFilePromise.push(new Promise((res, rej)=>{
                 const fileContent = fs.readFileSync(filePath, "utf8");
                 const finalFileContent = mustache.render(fileContent, {dataSource: dataSourceName})
                 
                 fs.writeFile(filePath, finalFileContent, (err) => {
                   if (err) {
-                    console.log(err);                
+                    console.log(err); 
+                    rej();               
+                  } else {
+                    res();       
                   }
                 });  
               }));
             });
-            Promise.all(writeFilePromise).finally(()=>{
+            Promise.all(writeFilePromise).then(()=>{
               resolve();
-            });
+            }).catch(()=>{
+              reject();
+            })
           })
           .catch(() => {
             reject();
@@ -89,12 +94,6 @@ async function writeSubgraphYaml(
   templates?: Array<string>
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    console.log("writeSubgraphYaml called: ", {
-      vertical,
-      subgraphYamlPath,
-      dataSource,
-      templates,
-    });
     const airstackYaml = Utils.getAirstackYamlForVertical(vertical);
     const priceOracleYaml = Utils.getAirstackPriceOracle();
 

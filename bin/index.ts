@@ -1,9 +1,9 @@
 #! /usr/bin/env node
 
+import { Vertical } from "../src/constants";
 import { integrate } from "../src/integrate";
 
 const args = process.argv.slice(2);
-console.log("arguments: ", args);
 
 if (args.length == 0) {
   console.error("Please enter at least the vertical type");
@@ -68,8 +68,67 @@ for (let index = START_INDEX; index < args.length; index++) {
 
 integrate(vertical, yaml, graphql, dataSources, templates)
   .then(() => {
+    switch (vertical) {
+      case Vertical.Dex:
+        console.log(`
+        Integration done. Please call the following functions.
+        1. Add pool
+        
+          function addDexPool(
+            poolAddress: string,
+            fee: BigInt,
+            inputTokens: Array<string>,
+            weights: Array<BigDecimal> | null = null,
+            outputToken: string | null = null
+          ): void
+
+        2. Add pool
+
+          function swap(
+            poolAddress: string,
+            inputAmounts: Array<BigInt>,
+            outputAmounts: Array<BigInt>,
+            inputTokenIndex: i32,
+            outputTokenIndex: i32,
+            from: string,
+            to: string,
+            hash: string,
+            logIndex: BigInt,
+            timestamp: BigInt,
+            blockNumber: BigInt
+          ): void
+
+          For documentation and examples please check: https://github.com/Airstack-xyz/airstack-subgraph/tree/task/npx-scripts
+        `);
+        break;
+    
+      case Vertical.NftMarketplace:
+        console.log(`
+        Integration done. Please call the following functions.
+        1. Track NFT trade
+        
+          function trackNFTSaleTransactions(
+            blockNumber: BigInt,
+            txHash: string,
+            fromArray: Address[],
+            toArray: Address[],
+            contractAddressArray: Address[],
+            nftIdArray: BigInt[],
+            paymentTokenAddress: Address,
+            paymentAmount: BigInt,
+            timestamp: BigInt
+          ): void 
+
+        For documentation and examples please check: https://github.com/Airstack-xyz/airstack-subgraph/tree/task/npx-scripts
+        `);
+        break;
+    
+      default:
+        break;
+    }
     process.exit(0); //no errors occurred
   })
   .catch(() => {
+    console.error("Integration failed");
     process.exit(1);
   });
