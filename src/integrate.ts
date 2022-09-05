@@ -205,7 +205,7 @@ function writeSubgraphGraphql(
 
 function copyAirstackModules(): string {
   const sourceDir = path.resolve(__dirname, '../../modules');
-  const targetDir = path.resolve(__dirname, '../../../../modules');
+  const targetDir = path.resolve(__dirname, '../../../../../modules');
 
   // To copy a folder or file, select overwrite accordingly
   try {
