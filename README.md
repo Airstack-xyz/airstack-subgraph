@@ -7,7 +7,7 @@
 
 ## Introduction
 
-Airstack is developing a APIs, Protocols and Dapps for browsing, discovering, and consuming on-chain data across projects and across blockchains. Our motivation for creating Airstack is to enable common ways to organize blockchain data and make it universally consumable.
+Airstack is developing a Protocols and APIs for browsing, discovering, and consuming on-chain data across projects and across blockchains. Our motivation for creating Airstack is to enable common ways to organize blockchain data and make it universally consumable.
 
 This is a large and important problem to solve. On Ethereum based chains (EVMs) alone there are already more than 10 million daily transactions happening across thousands of protocols and dapps. Today those transactions exist in silos; there are no easy ways to query across projects and blockchains — to map relationship and behaviors, discover trends at the event level, and analyze product utility.
 
