@@ -304,7 +304,7 @@ enum FarmTransactionType {
   CLAIM
 }
 
-type AirPoolFarmTransaction @entity {
+type AirPoolFarmTransaction @entity(immutable: true) {
   id: ID!
   hash: String!
   type: FarmTransactionType!
@@ -356,7 +356,7 @@ type AirSwapOutputTokenStats implements AirTokenStats @entity {
   extraData: [AirExtraData!]
 }
 
-type AirDEXSwapTransaction @entity {
+type AirDEXSwapTransaction @entity(immutable: true) {
   id: ID!
   dexPool: AirDEXPool!
   swapStatsRef: AirDEXSwapStats! # for reference
@@ -391,7 +391,7 @@ type AirNFTSaleStats implements AirEntityStats @entity {
   extraData: [AirExtraData!]
 }
 
-type AirNFTSaleTransaction @entity {
+type AirNFTSaleTransaction @entity(immutable: true) {
   id: ID!
   hash: String!
   saleStat: AirNFTSaleStats!
