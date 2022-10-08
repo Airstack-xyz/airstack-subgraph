@@ -171,6 +171,15 @@ type AirAccount @entity {
     @derivedFrom(field: "account")
 }
 
+type _Schema_
+  @fulltext(
+    name: "airAccountSearch"
+    language: en
+    algorithm: rank
+    include: [{ entity: "AirAccount", fields: [{ name: "address" }] }]
+  )
+
+
 type AirContract @entity {
   id: ID!
   address: String!
@@ -189,7 +198,7 @@ type AirNFTSaleStats implements AirEntityStats @entity {
   extraData: [AirExtraData!]
 }
 
-type AirNFTSaleTransaction @entity {
+type AirNFTSaleTransaction @entity(immutable: true) {
   id: ID!
   hash: String!
   saleStat: AirNFTSaleStats!

@@ -167,6 +167,14 @@ type AirAccount @entity {
     @derivedFrom(field: "account")
 }
 
+type _Schema_
+  @fulltext(
+    name: "airAccountSearch"
+    language: en
+    algorithm: rank
+    include: [{ entity: "AirAccount", fields: [{ name: "address" }] }]
+  )
+
 interface AirTokenStats implements AirEntityStats @entity {
   id: ID!
   #entityStat: AirEntityStats! # for reference
@@ -235,7 +243,7 @@ type AirLiquidityPoolOutputTokenStats implements AirTokenStats @entity {
   extraData: [AirExtraData!]
 }
 
-type AirLiquidityPoolTransaction @entity {
+type AirLiquidityPoolTransaction @entity(immutable: true) {
   id: ID!
   dexPool: AirDEXPool!
   liquidityPoolStatsRef: AirLiquidityPoolStats! # for reference
@@ -274,7 +282,7 @@ enum FarmTransactionType {
   CLAIM
 }
 
-type AirPoolFarmTransaction @entity {
+type AirPoolFarmTransaction @entity(immutable: true) {
   id: ID!
   hash: String!
   type: FarmTransactionType!
@@ -326,11 +334,19 @@ type AirSwapOutputTokenStats implements AirTokenStats @entity {
   extraData: [AirExtraData!]
 }
 
-type AirDEXSwapTransaction @entity {
+type AirDEXSwapTransaction @entity(immutable: true) {
   id: ID!
   dexPool: AirDEXPool!
   swapStatsRef: AirDEXSwapStats! # for reference
   hash: String!
   inputTokenTransfer: AirTokenTransfer!
   outputTokenTransfer: AirTokenTransfer!
+}
+
+type AirEntityDailyChangeStats @entity {
+  id: ID!
+  walletCountChangeInPercentage: BigDecimal!
+  tokenCountChangeInPercentage: BigDecimal!
+  transactionCountChangeInPercentage: BigDecimal!
+  volumeInUSDChangeInPercentage: BigDecimal!
 }
