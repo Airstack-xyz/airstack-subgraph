@@ -265,7 +265,7 @@ type AirLiquidityPoolOutputTokenStats implements AirTokenStats @entity {
   extraData: [AirExtraData!]
 }
 
-type AirLiquidityPoolTransaction @entity {
+type AirLiquidityPoolTransaction @entity(immutable: true) {
   id: ID!
   dexPool: AirDEXPool!
   liquidityPoolStatsRef: AirLiquidityPoolStats! # for reference
