@@ -14,26 +14,15 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mapping.ts
       entities:
-        - AirDailyAggregateEntity
-        - AirDailyAggregateEntityStats
-        - AirToken
-        - AirDailyAggregateEntityAccount
-        - AirAccount
-        - AirDEXPool
-        - AirLiquidityPoolStats
-        - AirTokenStats
-        - AirEntityDailyChangeStats
-        - AirLiquidityPoolInputTokenStats
-        - AirLiquidityPoolOutputTokenStats
-        - AirLiquidityPoolTransaction
-        - AirTokenTransfer
-        - AirPoolFarmRewardStats
-        - AirPoolFarmTransaction
-        - AirDEXSwapStats
-        - AirDEXSwapTransaction
-        - AirNFTSaleTransaction
-        - AirNFTSaleStats
         - AirMeta
+        - AirBlock
+        - AirEntityCounter
+        - AirAccount
+        - AirToken
+        - AirNftTransaction
+        - AirNftSaleRoyalty
+        - AirTokenMetadata
+        - AirExtraData
       abis:
         - name: Airstack
           file: ./abis/Airstack.json

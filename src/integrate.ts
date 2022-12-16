@@ -108,7 +108,7 @@ async function writeSubgraphYaml(
     }
 
     let whiteListedTemplates = templates;
-    if (!whiteListedTemplates) {
+    if (sourceSubgraphYaml.templates && !whiteListedTemplates) {
       whiteListedTemplates = sourceSubgraphYaml.templates.map(
         (dSrc: Record<string, any>) => dSrc.name
       );
