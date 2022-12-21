@@ -13,7 +13,7 @@ import {
     AirToken,
     AirBlock,
     AirNftSaleRoyalty
-} from "../generated/schema";
+} from "../../generated/schema";
 
 export namespace nft {
     export function trackNFTSaleTransactions(
