@@ -1,42 +1,5 @@
-enum AirTokenDisplayType {
-  IMAGE
-  VIDEO
-  AUDIO
-  TEXT_IMAGE
-  TEXT
-}
-enum AirNFTTransactionType {
-  SALE
-  MINT
-  GIFT
-}
-
-enum AirProtocolType {
-  GENERIC
-  EXCHANGE
-  LENDING
-  YIELD
-  BRIDGE
-  DAO
-  NFT_MARKET_PLACE
-  STAKING
-  P2E #play to earn
-  LAUNCHPAD
-}
-
-enum AirTokenStandardType {
-  ERC1155
-  ERC721
-  ERC20
-}
-
-enum AirTokenUsageType {
-  LP
-  REWARD
-  STAKE
-  MINT
-  GENERIC
-}
+const schema = `#
+# --Airstack Schemas--
 
 enum AirNetwork {
   ARBITRUM_ONE
@@ -58,85 +21,38 @@ enum AirNetwork {
   NEAR_MAINNET
   OPTIMISM
   OSMOSIS
-  matic # aka Polygon
+  MATIC # aka Polygon
   XDAI # aka Gnosis Chain
 }
-enum AirProtocolActionType {
-  ### NFT Marketplace/Tokens ###
-  BUY
-  SELL
-  MINT
-  BURN # TODO check this later
-  ### NFT (ex: Poap) ###
-  ATTEND
-
-  ### P2E (NFT + Utility) ###
-  EARN
-
-  ### DEX ###
-  SWAP
-  ADD_LIQUIDITY
-  REMOVE_LIQUIDITY
-  ADD_TO_FARM
-  REMOVE_FROM_FARM
-  CLAIM_FARM_REWARD
-
-  ### Lending ###
-  LEND
-  BORROW
-  FLASH_LOAN
-
-  ### Staking / Delegating ###
+enum AirProtocolType {
+  GENERIC
+  EXCHANGE
+  LENDING
+  YIELD
+  BRIDGE
+  DAO
+  NFT_MARKET_PLACE
+  STAKING
+  P2E #play to earn
+  LAUNCHPAD
+}
+enum AirTokenStandardType {
+  ERC1155
+  ERC721
+  ERC20
+}
+enum AirTokenUsageType {
+  POOL
+  LP
+  REWARD
   STAKE
-  RESTAKE
-  UNSTAKE
-  DELEGATE
-  CLAIM_REWARDS
+  MINT
+  GENERIC
 }
 
-type AirExtraData @entity {
+type AirContract @entity {
   id: ID!
-  name: String!
-  value: String!
-}
-
-interface AirEntityStats {
-  walletCount: BigInt!
-  tokenCount: BigInt!
-  transactionCount: BigInt! # number of transactions (not unique)
-  volumeInUSD: BigDecimal! # call price oracle and get the data and +
-  dailyChange: AirEntityDailyChangeStats!
-  extraData: [AirExtraData!]
-}
-
-type AirDailyAggregateEntity implements AirEntityStats @entity {
-  id: ID!
-  network: AirNetwork!
-  contract: AirContract!
-  protocolType: AirProtocolType!
-  protocolActionType: AirProtocolActionType!
-  daySinceEpoch: BigInt!
-  startDayTimestamp: BigInt!
-  updatedTimestamp: BigInt!
-  accounts: [AirDailyAggregateEntityAccount!]
-    @derivedFrom(field: "dailyAggregatedEntity")
-  stats: AirDailyAggregateEntityStats!
-  walletCount: BigInt!
-  tokenCount: BigInt!
-  transactionCount: BigInt! # number of transactions (not unique)
-  volumeInUSD: BigDecimal! # call price oracle and get the data and +
-  extraData: [AirExtraData!]
-}
-
-type AirDailyAggregateEntityStats @entity {
-  id: ID!
-  protocolActionType: AirProtocolActionType!
-
-  #### NFT Market Place
-  buyStats: AirNFTSaleStats
-  sellStats: AirNFTSaleStats
-  mintStats: AirNFTSaleStats
-  giftStats: AirNFTSaleStats
+  address: String!
 }
 
 type AirToken @entity {
@@ -149,11 +65,80 @@ type AirToken @entity {
   totalSupply: BigInt
 }
 
-#TODO check if this to be moved to NFT setction
 type AirTokenMetadata @entity {
   id: ID!
-  displayContentType: AirTokenDisplayType!
+	displayContentType: AirTokenDisplayType!
   displayContent: String
+}
+
+enum AirProtocolActionType {
+  ### NFT Marketplace/Tokens ###
+  BUY
+  SELL
+  MINT
+  BURN # TODO check this later
+  ### NFT (ex: Poap) ###
+  ATTEND
+  ### P2E (NFT + Utility) ###
+  EARN
+  ### DEX ###
+  SWAP
+  ADD_LIQUIDITY
+  REMOVE_LIQUIDITY
+  ADD_TO_FARM
+  REMOVE_FROM_FARM
+  CLAIM_FARM_REWARD
+  ### Lending ###
+  LEND
+  BORROW
+  FLASH_LOAN
+  ### Staking / Delegating ###
+  STAKE
+  RESTAKE
+  UNSTAKE
+  DELEGATE
+  CLAIM_REWARDS
+}
+enum AirTokenDisplayType {
+  IMAGE
+  VIDEO
+  AUDIO
+  TEXT_IMAGE
+  TEXT
+}
+type AirExtraData @entity {
+  id: ID!
+  name: String!
+  value: String!
+}
+interface AirEntityStats {
+  walletCount: BigInt!
+  tokenCount: BigInt!
+  transactionCount: BigInt! # number of transactions (not unique)
+  volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  #dailyChange: AirEntityDailyChangeStats!
+  extraData: [AirExtraData!]
+}
+type AirDailyAggregateEntity implements AirEntityStats @entity {
+  id: ID!
+  network: AirNetwork!
+  contract: AirContract!
+  protocolType: AirProtocolType!
+  protocolActionType: AirProtocolActionType!
+  daySinceEpoch: BigInt!
+  startDayTimestamp: BigInt!
+  updatedTimestamp: BigInt!
+  accounts: [AirDailyAggregateEntityAccount!]
+    @derivedFrom(field: "dailyAggregatedEntity")
+  stats: AirDailyAggregateEntityStats!
+
+  walletCount: BigInt!
+  tokenCount: BigInt!
+  transactionCount: BigInt! # number of transactions (not unique)
+  volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  #dailyChange: AirEntityDailyChangeStats!
+  blockHeight: BigInt!
+  extraData: [AirExtraData!]
 }
 
 type AirDailyAggregateEntityAccount @entity {
@@ -161,19 +146,28 @@ type AirDailyAggregateEntityAccount @entity {
   account: AirAccount!
   dailyAggregatedEntity: AirDailyAggregateEntity!
   volumeInUSD: BigDecimal!
-  index: BigInt! # incrementor for pagination purpose
+  index: BigInt! # incrementer for pagination purpose
 }
 
 type AirAccount @entity {
   id: ID!
   address: String!
-  dailyAggregatedEntities: [AirDailyAggregateEntityAccount!]
-    @derivedFrom(field: "account")
+  dailyAggregatedEntities: [AirDailyAggregateEntityAccount!] @derivedFrom(field: "account")
 }
 
-type AirContract @entity {
+type AirDailyAggregateEntityStats @entity {
   id: ID!
-  address: String!
+  protocolActionType: AirProtocolActionType!
+  #### NFT Market Place
+  saleStat: AirNFTSaleStats
+  # mintStats: AirNFTSaleStats
+  # giftStats: AirNFTSaleStats
+}
+
+enum AirNFTTransactionType {
+  SALE
+  MINT
+  GIFT
 }
 
 type AirNFTSaleStats implements AirEntityStats @entity {
@@ -186,13 +180,14 @@ type AirNFTSaleStats implements AirEntityStats @entity {
   tokenCount: BigInt!
   transactionCount: BigInt! # number of transactions (not unique)
   volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  #dailyChange: AirEntityDailyChangeStats!
   extraData: [AirExtraData!]
 }
 
 type AirNFTSaleTransaction @entity {
   id: ID!
   hash: String!
-  saleStat: AirNFTSaleStats!
+  saleStat: AirNFTSaleStats! 
   type: AirNFTTransactionType!
   to: AirAccount! #Buyer
   from: AirAccount! #Seller
@@ -203,3 +198,6 @@ type AirNFTSaleTransaction @entity {
   fees: BigInt
   tokenMetadata: AirTokenMetadata
 }
+`;
+
+export default schema;

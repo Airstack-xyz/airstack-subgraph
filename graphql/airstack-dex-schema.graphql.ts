@@ -1,3 +1,6 @@
+const schema = `#
+# --Airstack Schemas--
+
 enum AirNetwork {
   ARBITRUM_ONE
   ARWEAVE_MAINNET
@@ -113,6 +116,8 @@ type AirDailyAggregateEntity implements AirEntityStats @entity {
   tokenCount: BigInt!
   transactionCount: BigInt! # number of transactions (not unique)
   volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  dailyChange: AirEntityDailyChangeStats!
+  blockHeight: BigInt!
   extraData: [AirExtraData!]
 }
 
@@ -215,7 +220,7 @@ type AirDEXPool @entity {
   id: ID!
   poolAddress: String!
   inputToken: [AirToken!]!
-  tokenBalances: [BigInt!]!
+  tokenBalances:[BigInt!]!
   weightage: [BigDecimal!]!
   outputToken: AirToken!
   fee: BigInt!
@@ -388,6 +393,7 @@ type AirNFTSaleStats implements AirEntityStats @entity {
   tokenCount: BigInt!
   transactionCount: BigInt! # number of transactions (not unique)
   volumeInUSD: BigDecimal! # call price oracle and get the data and +
+  dailyChange: AirEntityDailyChangeStats!
   extraData: [AirExtraData!]
 }
 
@@ -406,8 +412,11 @@ type AirNFTSaleTransaction @entity {
   tokenMetadata: AirTokenMetadata
 }
 
-type AirMeta @entity {
+type AirMeta @entity{
   id: ID!
   daySinceEpoch: BigInt!
   blockNumber: BigInt!
 }
+`;
+
+export default schema;

@@ -38,14 +38,19 @@ The 8 verticals defined for Airstack schemas are:
 
 You already have a subgraph for Dapp/Protocol. And you intend to integrate Airstack schemas into the project.
 
-### 2. Identify the vertical for the Dapp/Protocol:
+### 2. Install Airstack package:
+```npm
+npm install  @airstack/subgraph-generator
+```
+
+### 3. Identify the vertical for the Dapp/Protocol:
 
 Currently, we support eight verticals. Identify your project's vertical
 
 Use the following command to add Airstack Schemas and ABIs in your project's `subgraph.yaml`
 
 ```npm
-npx airstack <verical>  --yaml <subgraph.yaml file path --dataSourceNames <name1, name2, ...>
+npx  @airstack/subgraph-generator <vertical>  --yaml <subgraph.yaml file path> --graphql <schema.graphql file path> --dataSourceNames <"name1, name2, ..."> --templates <"name1, name2"> 
 ```
 
 `npx airstack <vertical>`
@@ -54,25 +59,30 @@ will add the required Airstack entities and the ABI files in your **subgraph.yam
 `--yaml <subgraph.yaml file path>`
 provide the location of your project's **subgraph.yaml** file. This is an optional parameter.
 
+`--graphql <subgraph.graphql file path>`
+provide the location of your project's **schema.graphql** file. This is an optional parameter.
+
 `--dataSourceNames <name1, name2, ...>` provide the **dataSource** name where Airstack entities will be added. This is an optional parameter. By default, the entities will be added in all the **dataSource** provided in the **subgraph.yaml**.
+
+`--templates <name1, name2, ...>` provide the **teamplate** name where Airstack entities will be added. This is an optional parameter. By default, the entities will be added in all the **teamplate** provided in the **subgraph.yaml**.
 
 Examples:
 
 a. NFT Marketplace
 
 ```
-npx airstack nft_marketplace
+npx @airstack/subgraph-generator nft-marketplace
 ```
 
 b. DEX
 
 ```
-npx airstack dex --yaml "./subgraph.yaml" --dataSourceNames Factory, Pair
+npx @airstack/subgraph-generator dex --yaml "./subgraph.yaml" --dataSourceNames "Factory, Pair"
 ```
 
 Following are the vertical Ids
 
-NFT Marketplace: `nft_marketplace`<br/> NFT: `nft`Swap:`dex`<br/> Bridges: `bridge`<br/> DAO: `TBD`<br/> Defi: `TBD`<br/> Games: `TBD`<br/>
+NFT Marketplace: `nft-marketplace`<br/> NFT: `nft`Swap:`dex`<br/> Bridges: `bridge`<br/> DAO: `TBD`<br/> Defi: `TBD`<br/> Games: `TBD`<br/>
 
 Integration of the Airstack schemas is done. Now, move to the vertical-specific section for further integration.
 
@@ -87,102 +97,111 @@ Call the following functions from your subgraph mapping. An example implementati
 
    ```ts
    function trackNFTSaleTransactions(
-     txHash: string,
-     fromArray: Address[],
-     toArray: Address[],
-     contractAddressArray: Address[],
-     nftIdArray: BigInt[],
-     paymentTokenAddress: Address,
-     paymentAmount: BigInt,
-     timestamp: BigInt
+    chainID: string,
+    txHash: string,
+    txIndex: BigInt,
+    NftSales: Sale[],
+    protocolType: string,
+    protocolActionType: string,
+    timestamp: BigInt,
+    blockHeight: BigInt,
+    blockHash: string
    ): void;
    ```
+   
+   **chainID**: ID of the chain on which contract of the subgraph is deployed<br/>
+   **txHash**: Transaction hash of the NFT transaction<br/>
+   **txIndex**: Transaction Index of the NFT transaction<br/>
+   **NFTSales**: Array of the Sale objects containing details of NFT sales<br/>
+   **ProtocolType**: Protocol type<br/>
+   **ProtocolActionType**: Protocol Action Type<br/>
+   **Timestamp**: Timestamp of the block in which transaction happened<br/>
+   **blockHeight**: Block height<br/>
+   **blockHash**: Block hash<br/>
 
-   **txHash**: Add details<br/>
-   **fromArray**: Add details<br/>
-   **toArray**: Add details<br/>
-   **contractAddressArray**: Add details<br/>
-   **nftIdArray**: Add details<br/>
-   **paymentTokenAddress**: Add details<br/>
-   **paymentAmount**: Add details<br/>
-   **timestamp**: Add details<br/>
+Supported protocol types are :-
+  GENERIC
+  EXCHANGE
+  LENDING
+  YIELD
+  BRIDGE
+  DAO
+  NFT_MARKET_PLACE
+  STAKING
+  P2E #play to earn
+  LAUNCHPAD
 
-#### b. Swaps/DEX
+Supported protocol action types are :-
+  ALL ##to track all action stats of a dapp
+  ### NFT Marketplace/Tokens ###
+  BUY
+  SELL
+  MINT
+  BURN # TODO check this later
+  ### NFT (ex: Poap) ###
+  ATTEND
+  ### P2E (NFT + Utility) ###
+  EARN
+  ### DEX ###
+  SWAP
+  ADD_LIQUIDITY
+  REMOVE_LIQUIDITY
+  ADD_TO_FARM
+  REMOVE_FROM_FARM
+  CLAIM_FARM_REWARD
+  ### Lending ###
+  LEND
+  BORROW
+  FLASH_LOAN
+  ### Staking / Delegating ###
+  STAKE
+  RESTAKE
+  UNSTAKE
+  DELEGATE
+  CLAIM_REWARDS
 
-Track actions for DEX Projects.
-Call the following functions from your subgraph mapping. An example implementation is [Here](https://github.com/Airstack-xyz).
+#### b. NFT Marketplace
 
-1. Creation of Pool
+Track actions for NFT Marketplaces.
+Call the following function from your subgraph mapping. An example implementation is [Here](https://github.com/Airstack-xyz/Subgraphs)
 
+1. Creation of NFT object
    ```ts
-    dex.addDexPool(
-      poolAddress: string,
-      fee: BigInt,
-      inputTokens: Array<string>,
-      weights: Array<BigDecimal> | null = null,
-      outputToken: string | null = null
-    ): void;
+   NFT(
+    Collection Address : Address,
+    Standard: string, //ERC1155 or ERC721
+    tokenId: BigInt,
+    amount: BigInt
+   )
    ```
-
-   **poolAddress**: Dex pool address<br/>
-   **fee**: Fee amount<br/>
-   **inputTokens**: Array of address of tokens<br/>
-   **weights**: Weightage of each input token<br/>
-   **outputToken**: LP token address<br/>
-
-2. Add Liquidity
-
+2. Creation of NFT Sale object
    ```ts
-   function addLiquidity(
-     poolAddress: string,
-     inputAmounts: Array<BigInt>,
-     from: string,
-     to: string,
-     hash: string,
-     logIndex: BigInt,
-     timestamp: BigInt
-   ): void;
+   Sale(
+    buyer: Address,
+    seller: Address,
+    nft: NFT,
+    paymentAmount: BigInt,
+    paymentToken: Address,
+    protocolFees: BigInt,
+    protocolFeesBeneficiary: Address,
+    royaltyFees: BigInt,
+    royaltyFeesBeneficiary: Address
+   )
    ```
 
-   **poolAddress**: Dex pool address<br/>
-   **inputAmounts**: Array of input token amounts<br/>
-   **from**: From wallet address<br/>
-   **to**: To wallet address<br/>
-   **hash**: Transaction hash<br/>
-   **logIndex**: Transaction log index<br/>
-   **timestamp**: Transaction timestamp<br/>
-
-3. Swap
-
+3. Use the trackNFTSaleTransactions function to process the data and store in Airstack schema
    ```ts
-   function swap(
-     poolAddress: string,
-     inputAmounts: Array<BigInt>,
-     outputAmounts: Array<BigInt>,
-     inputTokenIndex: i32,
-     outputTokenIndex: i32,
-     from: string,
-     to: string,
-     hash: string,
-     logIndex: BigInt,
-     timestamp: BigInt
-   ): void;
-   ```
-
-   **poolAddress**: Dex pool address<br/>
-   **inputAmounts**: Array of input amounts<br/>
-   **outputAmounts**: Array of output amounts<br/>
-   **inputTokenIndex**: Index of token in dex pool for input<br/>
-   **outputTokenIndex**: Index of token in dex pool for output<br/>
-   **from**: From wallet address<br/>
-   **to**: To wallet address<br/>
-   **hash**: Transaction hash<br/>
-   **logIndex**: Transaction log index<br/>
-   **timestamp**: Transaction timestamp<br/>
-
-4. Remove Liquidity
-   ```
-     TBA
+    trackNFTSaleTransactions(
+        chainID: string,
+        txHash: string,
+        txIndex: BigInt,
+        NftSales: Sale[],
+        protocolType: string,
+        protocolActionType: string,
+        timestamp: BigInt,
+        blockHeight: BigInt,
+        blockHash: string
+      ): void;
    ```
 
 ### 4. Development status of each vertical
@@ -192,7 +211,7 @@ Call the following functions from your subgraph mapping. An example implementati
 🔨 = In progress implementation<br/>
 ✅ = Completed<br/>
 
-| Verical         | Status |
+| Vertical         | Status |
 | --------------- | :----: |
 | NFT Marketplace |   🔨   |
 | DEX             |   🔨   |
