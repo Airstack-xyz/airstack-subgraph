@@ -1,23 +1,9 @@
-# Airstack Subgraphs
 
-**Every day there are millions of blockchain transactions.**
-**Airstack makes sense of them.**
-
-[Here](https://app.airstack.xyz/) is a live example of how the Airstack entities are consumed.
-
-## Introduction
-
-Airstack is developing Protocols and APIs for browsing, discovering, and consuming on-chain data across projects and across blockchains. Our motivation for creating Airstack is to enable common ways to organize blockchain data and make it universally consumable.
-
-This is a large and important problem to solve. On Ethereum based chains (EVMs) alone there are already more than 10 million daily transactions across thousands of protocols and dapps. Today those transactions exist in silos; there are no easy ways to query across projects and blockchains — to map relationship and behaviors, discover trends at the event level, and integrate the ecosystem into data-aware applications.
-
-Airstack is building the tooling now to enable a decentralized web3 data network that will enable easy querying of data across projects and blockchains.
-
-To do so, Airstack is helping standardize blockchain data, aggregating it, mapping relationships, and providing protocols and APIs to access it.
 
 ## What are Airstack Schema?
 
-Airstack schemas are standardized schemas to access the data across projects and blockchains.
+Airstack schemas are standardized schemas to access data across projects and blockchains.
+
 These schemas are for eight initial verticals, and it is intended that any dapp/protocol within those verticals could be indexed consistently by utilizing the Airstack schemas for Subgraph.
 
 The 8 verticals defined for Airstack schemas are:
